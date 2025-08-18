@@ -43,6 +43,24 @@ const Results = () => {
         "Record yourself reading various text types"
       ]
     },
+    repeat: {
+      title: "Repeat Sentences",
+      overall: 88,
+      metrics: {
+        accuracy: 92,
+        pronunciation: 85,
+        fluency: 87,
+        retention: 90
+      },
+      feedback: "Excellent listening skills and retention! Your pronunciation is clear and you maintained good fluency throughout. Great job on accurately repeating complex sentences.",
+      strengths: ["Strong listening skills", "High accuracy", "Good retention", "Clear pronunciation"],
+      improvements: ["Minor pronunciation refinements", "Consistency in longer sentences"],
+      recommendations: [
+        "Continue practicing with varied sentence structures",
+        "Focus on intonation patterns",
+        "Practice with different speaking speeds"
+      ]
+    },
     jumbled: {
       title: "Jumbled Sentences",
       overall: 78,
@@ -77,6 +95,42 @@ const Results = () => {
         "Practice impromptu speaking daily",
         "Expand professional vocabulary",
         "Work on response structure (introduction, body, conclusion)"
+      ]
+    },
+    storytelling: {
+      title: "Storytelling",
+      overall: 80,
+      metrics: {
+        creativity: 85,
+        structure: 78,
+        fluency: 82,
+        vocabulary: 75
+      },
+      feedback: "Creative storytelling with good narrative flow! Your stories were engaging and well-structured. Focus on expanding vocabulary and maintaining consistent fluency.",
+      strengths: ["Creative narrative", "Engaging content", "Good story structure", "Natural flow"],
+      improvements: ["Vocabulary diversity", "Consistent pacing", "More complex sentence structures"],
+      recommendations: [
+        "Read diverse fiction to expand vocabulary",
+        "Practice storytelling with time limits",
+        "Focus on descriptive language techniques"
+      ]
+    },
+    listening: {
+      title: "Listening Comprehension", 
+      overall: 86,
+      metrics: {
+        comprehension: 90,
+        attention: 85,
+        inference: 82,
+        accuracy: 88
+      },
+      feedback: "Strong listening comprehension skills! You demonstrated excellent ability to understand main ideas and details. Your inference skills are developing well.",
+      strengths: ["Strong comprehension", "Good attention to detail", "Accurate responses"],
+      improvements: ["Inference skills", "Complex audio processing"],
+      recommendations: [
+        "Practice with varied accents and speeds",
+        "Focus on listening for implied meanings",
+        "Take notes while listening to longer passages"
       ]
     }
   };
