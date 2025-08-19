@@ -17,153 +17,258 @@ import {
   Shuffle
 } from "lucide-react";
 
-// Assessment data
-const assessmentData = {
-  reading: {
-    title: "Reading Sentences Aloud",
-    instructions: "Click 'Record' and read each sentence aloud clearly. Speak at a natural pace with proper pronunciation.",
-    questions: [
-      "The quick brown fox jumps over the lazy dog in the sunny meadow.",
-      "Technology has revolutionized the way we communicate and work in modern society.",
-      "Environmental conservation requires immediate action from all global communities.",
-      "Customer service representatives must demonstrate patience and problem-solving skills.",
-      "Data analysis reveals significant trends in consumer behavior and market preferences.",
-      "Effective leadership involves inspiring teams to achieve their maximum potential.",
-      "International collaboration is essential for addressing climate change challenges.",
-      "Digital transformation continues to reshape traditional business models worldwide."
-    ]
-  },
-  repeat: {
-    title: "Repeat Sentences",
-    instructions: "Listen carefully to each sentence and then record yourself repeating it exactly as you heard it.",
-    questions: [
-      "Technology has revolutionized modern communication systems worldwide.",
-      "Customer service requires exceptional patience and problem-solving abilities.",
-      "Environmental sustainability demands immediate global collaborative action.",
-      "Data analysis reveals significant trends in consumer behavior patterns.",
-      "Effective leadership involves inspiring teams to achieve maximum potential.",
-      "Digital transformation continues reshaping traditional business models.",
-      "Professional development requires continuous learning and skill enhancement.",
-      "International cooperation is essential for addressing climate challenges.",
-      "Innovation drives economic progress and sustainable development initiatives.",
-      "Communication skills are fundamental for workplace success and growth.",
-      "Quality assurance ensures products meet industry standards consistently.",
-      "Project management involves coordinating resources and timelines effectively.",
-      "Strategic planning helps organizations achieve long-term objectives.",
-      "Team collaboration enhances productivity and creative problem-solving.",
-      "Market research provides valuable insights for business decisions.",
-      "Technical expertise combined with soft skills creates professional excellence."
-    ]
-  },
-  jumbled: {
-    title: "Jumbled Sentences",
-    instructions: "Arrange the words in the correct order to form meaningful sentences. Click words to add them to your sentence.",
-    questions: [
-      {
-        words: ["technology", "has", "changed", "our", "lives", "significantly"],
-        correct: "technology has changed our lives significantly"
-      },
-      {
-        words: ["team", "the", "project", "completed", "successfully", "their"],
-        correct: "the team completed their project successfully"
-      },
-      {
-        words: ["learning", "continuous", "is", "professional", "for", "essential", "growth"],
-        correct: "continuous learning is essential for professional growth"
-      },
-      {
-        words: ["communication", "effective", "workplace", "success", "key", "is", "to"],
-        correct: "effective communication is key to workplace success"
-      },
-      {
-        words: ["innovation", "drives", "economic", "and", "progress", "development"],
-        correct: "innovation drives economic progress and development"
-      },
-      {
-        words: ["management", "project", "requires", "and", "coordination", "planning", "careful"],
-        correct: "project management requires careful planning and coordination"
-      },
-      {
-        words: ["quality", "ensures", "assurance", "standards", "meet", "products", "industry"],
-        correct: "quality assurance ensures products meet industry standards"
-      },
-      {
-        words: ["research", "market", "provides", "insights", "valuable", "for", "decisions", "business"],
-        correct: "market research provides valuable insights for business decisions"
-      },
-      {
-        words: ["collaboration", "team", "enhances", "and", "productivity", "problem-solving"],
-        correct: "team collaboration enhances productivity and problem-solving"
-      },
-      {
-        words: ["development", "professional", "requires", "learning", "continuous", "and", "improvement"],
-        correct: "professional development requires continuous learning and improvement"
-      }
-    ]
-  },
-  qa: {
-    title: "Question & Answer",
-    instructions: "Listen to each question and provide a clear, detailed answer. Speak naturally and take your time.",
-    questions: [
-      "Tell me about yourself and your career goals.",
-      "Describe a challenging situation you faced and how you overcame it.",
-      "What are your greatest strengths and how do they help you at work?",
-      "How do you handle stress and pressure in demanding situations?",
-      "Describe a time when you had to work as part of a team.",
-      "What motivates you to perform well in your professional life?",
-      "How do you stay updated with industry trends and developments?",
-      "Describe your ideal work environment and company culture.",
-      "How do you prioritize tasks when you have multiple deadlines?",
-      "Tell me about a time you had to learn something new quickly.",
-      "What role does communication play in your work?",
-      "How do you handle feedback and criticism?",
-      "Describe a project you're particularly proud of.",
-      "What do you think makes a good leader?",
-      "How do you balance work and personal life?",
-      "What are your long-term career aspirations?",
-      "How do you stay motivated during challenging projects?",
-      "Describe your approach to problem-solving.",
-      "What do you consider your biggest professional achievement?",
-      "How do you handle working with difficult colleagues?",
-      "What skills would you like to develop further?",
-      "How do you ensure quality in your work?",
-      "What trends do you see in your industry?",
-      "How do you adapt to change in the workplace?"
-    ]
-  },
-  storytelling: {
-    title: "Storytelling",
-    instructions: "Look at the prompt or images and create a 1-2 minute story. Be creative and speak clearly with good structure.",
-    questions: [
-      {
-        type: "prompt",
-        content: "Tell a story about a time when technology helped solve an unexpected problem at work."
-      },
-      {
-        type: "prompt", 
-        content: "Create a story about teamwork during a challenging project deadline."
-      }
-    ]
-  },
-  listening: {
-    title: "Listening Comprehension",
-    instructions: "Listen carefully to each audio passage and answer the questions that follow.",
-    questions: [
-      {
-        audio: "In today's digital workplace, effective communication has become more crucial than ever. With remote work becoming the norm, professionals must adapt their communication strategies to maintain productivity and team cohesion. Email, video calls, and instant messaging have replaced face-to-face interactions, requiring new skills in digital literacy and virtual collaboration.",
-        question: "What has become more crucial in today's digital workplace?",
-        options: ["Technical skills", "Effective communication", "Physical presence", "Time management"],
-        correct: 1
-      },
-      {
-        audio: "Project management methodologies have evolved significantly over the past decade. Agile and Scrum frameworks have gained popularity due to their flexibility and iterative approach. These methodologies emphasize collaboration, customer feedback, and rapid adaptation to changing requirements, making them ideal for dynamic business environments.",
-        question: "Why have Agile and Scrum frameworks gained popularity?",
-        options: ["They are cheaper", "They require fewer resources", "They offer flexibility and iterative approach", "They eliminate the need for meetings"],
-        correct: 2
-      }
-    ]
-  }
+// Question pools for dynamic generation
+const questionPools = {
+  reading: [
+    "The quick brown fox jumps over the lazy dog in the sunny meadow.",
+    "Technology has revolutionized the way we communicate and work in modern society.",
+    "Environmental conservation requires immediate action from all global communities.",
+    "Customer service representatives must demonstrate patience and problem-solving skills.",
+    "Data analysis reveals significant trends in consumer behavior and market preferences.",
+    "Effective leadership involves inspiring teams to achieve their maximum potential.",
+    "International collaboration is essential for addressing climate change challenges.",
+    "Digital transformation continues to reshape traditional business models worldwide.",
+    "Artificial intelligence is transforming industries across the globe.",
+    "The library offers extensive resources for research and academic studies.",
+    "Regular exercise contributes significantly to maintaining good health.",
+    "The company launched a new product line targeting young professionals.",
+    "Environmental conservation requires collective effort from all citizens.",
+    "The museum showcases artifacts from ancient civilizations around the world.",
+    "Communication skills are crucial for success in any professional environment.",
+    "The scientific breakthrough could lead to revolutionary medical treatments."
+  ],
+  repeat: [
+    "Technology has revolutionized modern communication systems worldwide.",
+    "Customer service requires exceptional patience and problem-solving abilities.",
+    "Environmental sustainability demands immediate global collaborative action.",
+    "Data analysis reveals significant trends in consumer behavior patterns.",
+    "Effective leadership involves inspiring teams to achieve maximum potential.",
+    "Digital transformation continues reshaping traditional business models.",
+    "Professional development requires continuous learning and skill enhancement.",
+    "International cooperation is essential for addressing climate challenges.",
+    "Innovation drives economic progress and sustainable development initiatives.",
+    "Communication skills are fundamental for workplace success and growth.",
+    "Quality assurance ensures products meet industry standards consistently.",
+    "Project management involves coordinating resources and timelines effectively.",
+    "Strategic planning helps organizations achieve long-term objectives.",
+    "Team collaboration enhances productivity and creative problem-solving.",
+    "Market research provides valuable insights for business decisions.",
+    "Technical expertise combined with soft skills creates professional excellence.",
+    "Global markets require adaptability and cultural awareness from professionals.",
+    "Cybersecurity measures protect sensitive data and maintain user trust.",
+    "Remote work has changed traditional office dynamics significantly."
+  ],
+  jumbled: [
+    {
+      words: ["technology", "has", "changed", "our", "lives", "significantly"],
+      correct: "technology has changed our lives significantly"
+    },
+    {
+      words: ["team", "the", "project", "completed", "successfully", "their"],
+      correct: "the team completed their project successfully"
+    },
+    {
+      words: ["learning", "continuous", "is", "professional", "for", "essential", "growth"],
+      correct: "continuous learning is essential for professional growth"
+    },
+    {
+      words: ["communication", "effective", "workplace", "success", "key", "is", "to"],
+      correct: "effective communication is key to workplace success"
+    },
+    {
+      words: ["innovation", "drives", "economic", "and", "progress", "development"],
+      correct: "innovation drives economic progress and development"
+    },
+    {
+      words: ["management", "project", "requires", "and", "coordination", "planning", "careful"],
+      correct: "project management requires careful planning and coordination"
+    },
+    {
+      words: ["quality", "ensures", "assurance", "standards", "meet", "products", "industry"],
+      correct: "quality assurance ensures products meet industry standards"
+    },
+    {
+      words: ["research", "market", "provides", "insights", "valuable", "for", "decisions", "business"],
+      correct: "market research provides valuable insights for business decisions"
+    },
+    {
+      words: ["collaboration", "team", "enhances", "and", "productivity", "problem-solving"],
+      correct: "team collaboration enhances productivity and problem-solving"
+    },
+    {
+      words: ["development", "professional", "requires", "learning", "continuous", "and", "improvement"],
+      correct: "professional development requires continuous learning and improvement"
+    },
+    {
+      words: ["creativity", "helps", "solve", "complex", "problems", "efficiently"],
+      correct: "creativity helps solve complex problems efficiently"
+    },
+    {
+      words: ["global", "business", "requires", "cultural", "understanding", "and", "adaptation"],
+      correct: "global business requires cultural understanding and adaptation"
+    }
+  ],
+  qa: [
+    "Tell me about yourself and your career goals.",
+    "Describe a challenging situation you faced and how you overcame it.",
+    "What are your greatest strengths and how do they help you at work?",
+    "How do you handle stress and pressure in demanding situations?",
+    "Describe a time when you had to work as part of a team.",
+    "What motivates you to perform well in your professional life?",
+    "How do you stay updated with industry trends and developments?",
+    "Describe your ideal work environment and company culture.",
+    "How do you prioritize tasks when you have multiple deadlines?",
+    "Tell me about a time you had to learn something new quickly.",
+    "What role does communication play in your work?",
+    "How do you handle feedback and criticism?",
+    "Describe a project you're particularly proud of.",
+    "What do you think makes a good leader?",
+    "How do you balance work and personal life?",
+    "What are your long-term career aspirations?",
+    "How do you stay motivated during challenging projects?",
+    "Describe your approach to problem-solving.",
+    "What do you consider your biggest professional achievement?",
+    "How do you handle working with difficult colleagues?",
+    "What skills would you like to develop further?",
+    "How do you ensure quality in your work?",
+    "What trends do you see in your industry?",
+    "How do you adapt to change in the workplace?",
+    "What drives your passion for your field?",
+    "How do you maintain professional relationships?",
+    "Describe your experience with remote work.",
+    "What role does innovation play in your work?",
+    "How do you handle tight deadlines and multiple priorities?",
+    "What would you do to improve team productivity?"
+  ],
+  storytelling: [
+    {
+      type: "prompt",
+      content: "Tell a story about a time when technology helped solve an unexpected problem at work."
+    },
+    {
+      type: "prompt", 
+      content: "Create a story about teamwork during a challenging project deadline."
+    },
+    {
+      type: "prompt",
+      content: "Describe a situation where clear communication prevented a major misunderstanding."
+    },
+    {
+      type: "prompt",
+      content: "Tell a story about learning an important lesson from a failure."
+    },
+    {
+      type: "prompt",
+      content: "Create a narrative about adapting to unexpected changes in a work environment."
+    },
+    {
+      type: "prompt",
+      content: "Describe a time when creative thinking led to an innovative solution."
+    }
+  ],
+  listening: [
+    {
+      title: "Remote Work Communication",
+      transcript: "In today's digital workplace, effective communication has become more crucial than ever. With remote work becoming the norm, professionals must adapt their communication strategies to maintain productivity and team cohesion. Companies are investing heavily in digital collaboration tools, spending an average of $15,000 per employee annually. Email, video calls, and instant messaging have replaced face-to-face interactions, requiring new skills in digital literacy and virtual collaboration. Studies show that 78% of remote workers report feeling more connected when using video conferencing compared to audio-only calls.",
+      questions: [
+        {
+          question: "What has become more crucial in today's digital workplace?",
+          options: ["Technical skills", "Effective communication", "Physical presence", "Time management"],
+          correct: 1
+        },
+        {
+          question: "How much do companies spend on average per employee for digital collaboration tools?",
+          options: ["$10,000", "$15,000", "$20,000", "$25,000"],
+          correct: 1
+        },
+        {
+          question: "What percentage of remote workers feel more connected with video calls?",
+          options: ["68%", "78%", "88%", "98%"],
+          correct: 1
+        },
+        {
+          question: "What skills are required for virtual collaboration?",
+          options: ["Only technical skills", "Digital literacy and virtual collaboration", "Physical coordination", "Time management only"],
+          correct: 1
+        }
+      ]
+    },
+    {
+      title: "Project Management Evolution",
+      transcript: "Project management methodologies have evolved significantly over the past decade. Agile and Scrum frameworks have gained popularity due to their flexibility and iterative approach. These methodologies emphasize collaboration, customer feedback, and rapid adaptation to changing requirements, making them ideal for dynamic business environments. Traditional waterfall methods, once dominant in software development, now represent only 30% of project management approaches. The success rate of Agile projects is 42% higher than traditional methods, with teams completing projects 25% faster on average.",
+      questions: [
+        {
+          question: "Why have Agile and Scrum frameworks gained popularity?",
+          options: ["They are cheaper", "They require fewer resources", "They offer flexibility and iterative approach", "They eliminate the need for meetings"],
+          correct: 2
+        },
+        {
+          question: "What percentage of project management approaches do traditional waterfall methods represent now?",
+          options: ["20%", "30%", "40%", "50%"],
+          correct: 1
+        },
+        {
+          question: "How much higher is the success rate of Agile projects?",
+          options: ["32%", "42%", "52%", "62%"],
+          correct: 1
+        },
+        {
+          question: "How much faster do Agile teams complete projects on average?",
+          options: ["15%", "25%", "35%", "45%"],
+          correct: 1
+        }
+      ]
+    }
+  ]
 };
+
+// Generate random assessment data
+const generateRandomAssessment = () => {
+  const shuffle = (array: any[]) => {
+    const shuffled = [...array];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    return shuffled;
+  };
+
+  return {
+    reading: {
+      title: "Reading Sentences Aloud",
+      instructions: "Click 'Record' and read each sentence aloud clearly. Speak at a natural pace with proper pronunciation.",
+      questions: shuffle(questionPools.reading).slice(0, 8)
+    },
+    repeat: {
+      title: "Repeat Sentences", 
+      instructions: "Listen carefully to each sentence and then record yourself repeating it exactly as you heard it.",
+      questions: shuffle(questionPools.repeat).slice(0, 16)
+    },
+    jumbled: {
+      title: "Jumbled Sentences",
+      instructions: "Arrange the words in the correct order to form meaningful sentences. Click words to add them to your sentence.",
+      questions: shuffle(questionPools.jumbled).slice(0, 10)
+    },
+    qa: {
+      title: "Question & Answer",
+      instructions: "Listen to each question and provide a clear, detailed answer. Speak naturally and take your time.",
+      questions: shuffle(questionPools.qa).slice(0, 24)
+    },
+    storytelling: {
+      title: "Storytelling",
+      instructions: "Look at the prompt or images and create a 1-2 minute story. Be creative and speak clearly with good structure.",
+      questions: shuffle(questionPools.storytelling).slice(0, 2)
+    },
+    listening: {
+      title: "Listening Comprehension",
+      instructions: "Listen carefully to each audio passage and answer the questions that follow.",
+      questions: shuffle(questionPools.listening).slice(0, 2)
+    }
+  };
+};
+
+// Initialize assessment data
+const assessmentData = generateRandomAssessment();
 
 const Assessment = () => {
   const { sectionId } = useParams();
@@ -180,6 +285,10 @@ const Assessment = () => {
   const [recognition, setRecognition] = useState<any>(null);
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [showComparison, setShowComparison] = useState(false);
+  const [currentListeningQuestion, setCurrentListeningQuestion] = useState(0);
+  const [listeningAnswers, setListeningAnswers] = useState<number[]>([]);
+  const [hasPlayedAudio, setHasPlayedAudio] = useState(false);
   
   const section = assessmentData[sectionId as keyof typeof assessmentData];
   
@@ -226,11 +335,51 @@ const Assessment = () => {
     return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
 
+  const calculateAccuracy = (original: string, spoken: string): number => {
+    const originalWords = original.toLowerCase().replace(/[^\w\s]/g, '').split(' ').filter(w => w.length > 0);
+    const spokenWords = spoken.toLowerCase().replace(/[^\w\s]/g, '').split(' ').filter(w => w.length > 0);
+    
+    let matches = 0;
+    const maxLength = Math.max(originalWords.length, spokenWords.length);
+    
+    for (let i = 0; i < Math.min(originalWords.length, spokenWords.length); i++) {
+      if (originalWords[i] === spokenWords[i]) {
+        matches++;
+      }
+    }
+    
+    return maxLength > 0 ? Math.round((matches / maxLength) * 100) : 0;
+  };
+
+  const highlightDifferences = (original: string, spoken: string) => {
+    const originalWords = original.split(' ');
+    const spokenWords = spoken.split(' ');
+    const maxLength = Math.max(originalWords.length, spokenWords.length);
+    
+    const result = [];
+    for (let i = 0; i < maxLength; i++) {
+      const originalWord = originalWords[i] || '';
+      const spokenWord = spokenWords[i] || '';
+      const isMatch = originalWord.toLowerCase().replace(/[^\w]/g, '') === spokenWord.toLowerCase().replace(/[^\w]/g, '');
+      
+      if (originalWord) {
+        result.push({
+          word: originalWord,
+          type: 'original',
+          isMatch: isMatch && spokenWord
+        });
+      }
+    }
+    
+    return result;
+  };
+
   const handleRecord = async () => {
     if (!isRecording) {
       try {
         // Start recording
         setTranscription('');
+        setShowComparison(false);
         if (recognition) {
           recognition.start();
         }
@@ -247,6 +396,9 @@ const Assessment = () => {
           const audioBlob = new Blob(chunks, { type: 'audio/wav' });
           setAudioChunks([audioBlob]);
           stream.getTracks().forEach(track => track.stop());
+          if (sectionId === 'reading' || sectionId === 'repeat') {
+            setShowComparison(true);
+          }
         };
         
         recorder.start();
@@ -276,20 +428,51 @@ const Assessment = () => {
   };
 
   const handleNextQuestion = () => {
+    // Create detailed answer object
+    let answerData: any = {
+      questionIndex: currentQuestion,
+      timestamp: new Date().toISOString(),
+      transcription: transcription,
+      audioData: audioChunks[0] || null,
+    };
+
+    if (sectionId === 'reading' || sectionId === 'repeat') {
+      const originalText = section?.questions[currentQuestion] as string;
+      answerData.originalText = originalText;
+      answerData.accuracy = calculateAccuracy(originalText, transcription);
+    } else if (sectionId === 'jumbled') {
+      const question = section?.questions[currentQuestion] as { words: string[], correct: string };
+      answerData.userAnswer = jumbledAnswer.join(' ');
+      answerData.correctAnswer = question.correct;
+      answerData.isCorrect = question.correct.toLowerCase() === jumbledAnswer.join(' ').toLowerCase();
+    } else if (sectionId === 'listening') {
+      answerData.listeningAnswers = listeningAnswers;
+      answerData.questions = section?.questions[currentQuestion];
+    }
+
+    const newAnswers = [...answers, answerData];
+    setAnswers(newAnswers);
+
     if (currentQuestion < (section?.questions?.length || 0) - 1) {
       setCurrentQuestion(currentQuestion + 1);
       setHasRecorded(false);
       setJumbledAnswer([]);
       setTranscription('');
       setSelectedAnswer(null);
+      setShowComparison(false);
+      setListeningAnswers([]);
+      setCurrentListeningQuestion(0);
+      setHasPlayedAudio(false);
     } else {
-      // Assessment complete - save final answer data
-      const finalAnswers = sectionId === 'jumbled' 
-        ? [...answers, jumbledAnswer.join(' ')] 
-        : sectionId === 'listening'
-        ? [...answers, selectedAnswer?.toString() || '']
-        : [...answers, transcription];
-      navigate('/results', { state: { section: sectionId, answers: finalAnswers } });
+      // Assessment complete
+      navigate('/results', { 
+        state: { 
+          section: sectionId, 
+          answers: newAnswers, 
+          totalQuestions: section?.questions?.length || 0,
+          timeSpent: 300 - timeLeft
+        } 
+      });
     }
   };
 
@@ -339,6 +522,71 @@ const Assessment = () => {
                 <div className="w-3 h-3 bg-destructive rounded-full recording-pulse" />
                 <span className="text-sm font-medium">Recording in progress...</span>
               </div>
+            )}
+
+            {showComparison && transcription && (
+              <Card className="w-full max-w-4xl p-6 border-2 border-primary bg-gradient-to-br from-primary/5 to-primary/10">
+                <h3 className="text-xl font-semibold mb-4 text-center">Speech Analysis</h3>
+                
+                <div className="grid md:grid-cols-2 gap-6 mb-6">
+                  <div>
+                    <h4 className="font-medium mb-2 text-success">Original Sentence:</h4>
+                    <div className="p-4 bg-success/10 rounded-lg border border-success/20">
+                      <p className="text-success-foreground">{question}</p>
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <h4 className="font-medium mb-2 text-primary">What You Said:</h4>
+                    <div className="p-4 bg-primary/10 rounded-lg border border-primary/20">
+                      <p className="text-primary-foreground">{transcription || "No speech detected"}</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-center gap-4 mb-4">
+                  <div className="text-center">
+                    <div className={`text-3xl font-bold ${
+                      calculateAccuracy(question, transcription) >= 80 ? 'text-success' : 
+                      calculateAccuracy(question, transcription) >= 60 ? 'text-warning' : 'text-destructive'
+                    }`}>
+                      {calculateAccuracy(question, transcription)}%
+                    </div>
+                    <p className="text-sm text-muted-foreground">Accuracy Score</p>
+                  </div>
+                </div>
+
+                <div>
+                  <h4 className="font-medium mb-2">Word-by-Word Analysis:</h4>
+                  <div className="p-4 bg-muted/50 rounded-lg">
+                    <div className="flex flex-wrap gap-1">
+                      {highlightDifferences(question, transcription).map((item, index) => (
+                        <span
+                          key={index}
+                          className={`px-2 py-1 rounded text-sm ${
+                            item.isMatch 
+                              ? 'bg-success/20 text-success border border-success/30' 
+                              : 'bg-destructive/20 text-destructive border border-destructive/30'
+                          }`}
+                          title={item.isMatch ? 'Correct' : 'Incorrect or missing'}
+                        >
+                          {item.word}
+                        </span>
+                      ))}
+                    </div>
+                    <div className="mt-3 text-xs text-muted-foreground">
+                      <span className="inline-block mr-4">
+                        <span className="w-3 h-3 bg-success/20 border border-success/30 rounded inline-block mr-1"></span>
+                        Correct words
+                      </span>
+                      <span className="inline-block">
+                        <span className="w-3 h-3 bg-destructive/20 border border-destructive/30 rounded inline-block mr-1"></span>
+                        Incorrect/missing words
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </Card>
             )}
           </div>
         </Card>
