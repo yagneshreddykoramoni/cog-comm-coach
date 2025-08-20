@@ -615,6 +615,7 @@ const Assessment = () => {
                     size="sm"
                     onClick={() => setJumbledAnswer([...jumbledAnswer, word])}
                     className="capitalize hover:bg-primary hover:text-primary-foreground"
+                    disabled={hasRecorded}
                   >
                     {word}
                   </Button>
@@ -632,8 +633,8 @@ const Assessment = () => {
                       <Badge
                         key={index}
                         variant="secondary"
-                        className="cursor-pointer hover:bg-destructive hover:text-destructive-foreground"
-                        onClick={() => setJumbledAnswer(jumbledAnswer.filter((_, i) => i !== index))}
+                        className={`cursor-pointer ${hasRecorded ? '' : 'hover:bg-destructive hover:text-destructive-foreground'}`}
+                        onClick={() => !hasRecorded && setJumbledAnswer(jumbledAnswer.filter((_, i) => i !== index))}
                       >
                         {word}
                       </Badge>
@@ -645,11 +646,11 @@ const Assessment = () => {
               </div>
             </div>
 
-            <div className="flex gap-3">
+            <div className="flex gap-3 mb-6">
               <Button
                 variant="outline"
                 onClick={() => setJumbledAnswer([])}
-                disabled={jumbledAnswer.length === 0}
+                disabled={jumbledAnswer.length === 0 || hasRecorded}
               >
                 <RotateCcw className="h-4 w-4 mr-2" />
                 Reset
@@ -661,13 +662,53 @@ const Assessment = () => {
                   setAnswers(newAnswers);
                   setHasRecorded(true);
                 }}
-                disabled={jumbledAnswer.length === 0}
+                disabled={jumbledAnswer.length === 0 || hasRecorded}
                 variant="success"
               >
                 <CheckCircle className="h-4 w-4 mr-2" />
                 Submit Answer
               </Button>
             </div>
+
+            {/* Show comparison after submission */}
+            {hasRecorded && (
+              <Card className="p-6 border-2 border-primary bg-gradient-to-br from-primary/5 to-primary/10">
+                <h3 className="text-lg font-semibold mb-4 text-center">Answer Comparison</h3>
+                
+                <div className="grid md:grid-cols-2 gap-6 mb-4">
+                  <div>
+                    <h4 className="font-medium mb-2 text-primary">Your Answer:</h4>
+                    <div className="p-4 bg-primary/10 rounded-lg border border-primary/20">
+                      <p className="text-primary-foreground capitalize">{jumbledAnswer.join(' ')}</p>
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <h4 className="font-medium mb-2 text-success">Correct Answer:</h4>
+                    <div className="p-4 bg-success/10 rounded-lg border border-success/20">
+                      <p className="text-success-foreground capitalize">{question.correct}</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="text-center">
+                  <div className={`text-2xl font-bold mb-2 ${
+                    question.correct.toLowerCase() === jumbledAnswer.join(' ').toLowerCase() 
+                      ? 'text-success' 
+                      : 'text-destructive'
+                  }`}>
+                    {question.correct.toLowerCase() === jumbledAnswer.join(' ').toLowerCase() 
+                      ? '✓ Correct!' 
+                      : '✗ Incorrect'}
+                  </div>
+                  {question.correct.toLowerCase() !== jumbledAnswer.join(' ').toLowerCase() && (
+                    <p className="text-sm text-muted-foreground">
+                      Review the correct answer to understand the proper sentence structure.
+                    </p>
+                  )}
+                </div>
+              </Card>
+            )}
           </div>
         </Card>
       </div>
@@ -705,13 +746,6 @@ const Assessment = () => {
                 <Volume2 className="h-5 w-5 mr-2" />
                 {isPlaying ? 'Playing...' : 'Play Sentence'}
               </Button>
-              
-              {transcription && (
-                <div className="mt-4 p-4 bg-muted rounded-lg">
-                  <p className="text-sm text-muted-foreground mb-2">What you said:</p>
-                  <p className="font-medium">"{transcription}"</p>
-                </div>
-              )}
             </div>
             
             <div className="flex flex-col items-center gap-6">
@@ -745,6 +779,71 @@ const Assessment = () => {
                   <div className="w-3 h-3 bg-destructive rounded-full recording-pulse" />
                   <span className="text-sm font-medium">Recording your repetition...</span>
                 </div>
+              )}
+
+              {showComparison && transcription && (
+                <Card className="w-full max-w-4xl p-6 border-2 border-primary bg-gradient-to-br from-primary/5 to-primary/10">
+                  <h3 className="text-xl font-semibold mb-4 text-center">Speech Analysis</h3>
+                  
+                  <div className="grid md:grid-cols-2 gap-6 mb-6">
+                    <div>
+                      <h4 className="font-medium mb-2 text-success">Original Sentence:</h4>
+                      <div className="p-4 bg-success/10 rounded-lg border border-success/20">
+                        <p className="text-success-foreground">{question}</p>
+                      </div>
+                    </div>
+                    
+                    <div>
+                      <h4 className="font-medium mb-2 text-primary">What You Said:</h4>
+                      <div className="p-4 bg-primary/10 rounded-lg border border-primary/20">
+                        <p className="text-primary-foreground">{transcription || "No speech detected"}</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-center gap-4 mb-4">
+                    <div className="text-center">
+                      <div className={`text-3xl font-bold ${
+                        calculateAccuracy(question, transcription) >= 80 ? 'text-success' : 
+                        calculateAccuracy(question, transcription) >= 60 ? 'text-warning' : 'text-destructive'
+                      }`}>
+                        {calculateAccuracy(question, transcription)}%
+                      </div>
+                      <p className="text-sm text-muted-foreground">Accuracy Score</p>
+                    </div>
+                  </div>
+
+                  <div>
+                    <h4 className="font-medium mb-2">Word-by-Word Analysis:</h4>
+                    <div className="p-4 bg-muted/50 rounded-lg">
+                      <div className="flex flex-wrap gap-1">
+                        {highlightDifferences(question, transcription).map((item, index) => (
+                          <span
+                            key={index}
+                            className={`px-2 py-1 rounded text-sm ${
+                              item.isMatch 
+                                ? 'bg-success/20 text-success border border-success/30' 
+                                : 'bg-destructive/20 text-destructive border border-destructive/30'
+                            }`}
+                            title={item.isMatch ? 'Correct' : 'Incorrect or missing'}
+                          >
+                            {item.word}
+                          </span>
+                        ))}
+                      </div>
+                      <div className="mt-3 text-xs text-muted-foreground">
+                        <span className="inline-block mr-4">
+                          <span className="w-3 h-3 bg-success/20 border border-success/30 rounded inline-block mr-1"></span>
+                          Correct words
+                        </span>
+                        <span className="inline-block">
+                          <span className="w-3 h-3 bg-destructive/20 border border-destructive/30 rounded inline-block mr-1"></span>
+                          Incorrect/missing words
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </Card>
               )}
             </div>
           </div>
@@ -870,19 +969,30 @@ const Assessment = () => {
   };
 
   const renderListeningQuestion = () => {
-    const question = section?.questions[currentQuestion] as { 
-      audio: string, 
-      question: string, 
-      options: string[], 
-      correct: number 
+    const passage = section?.questions[currentQuestion] as { 
+      title: string,
+      transcript: string, 
+      questions: { question: string, options: string[], correct: number }[]
     };
     
     const playAudio = () => {
       setIsPlaying(true);
-      const utterance = new SpeechSynthesisUtterance(question.audio);
+      setHasPlayedAudio(true);
+      const utterance = new SpeechSynthesisUtterance(passage.transcript);
       utterance.rate = 0.9;
       utterance.onend = () => setIsPlaying(false);
       speechSynthesis.speak(utterance);
+    };
+
+    const handleAnswerSelect = (questionIndex: number, answerIndex: number) => {
+      const newAnswers = [...listeningAnswers];
+      newAnswers[questionIndex] = answerIndex;
+      setListeningAnswers(newAnswers);
+      
+      // Check if all questions are answered
+      if (newAnswers.length === passage.questions.length && !newAnswers.includes(undefined)) {
+        setHasRecorded(true);
+      }
     };
 
     return (
@@ -891,8 +1001,10 @@ const Assessment = () => {
           <div className="text-center mb-8">
             <div className="flex items-center justify-center gap-2 mb-4">
               <Volume2 className="h-5 w-5 text-primary" />
-              <span className="text-sm font-medium text-muted-foreground">Question {currentQuestion + 1}</span>
+              <span className="text-sm font-medium text-muted-foreground">Passage {currentQuestion + 1}</span>
             </div>
+            
+            <h3 className="text-xl font-semibold mb-6">{passage.title}</h3>
             
             <div className="mb-6">
               <Button
@@ -903,31 +1015,48 @@ const Assessment = () => {
                 className="mb-6"
               >
                 <Volume2 className="h-5 w-5 mr-2" />
-                {isPlaying ? 'Playing Audio...' : 'Play Audio'}
+                {isPlaying ? 'Playing Audio...' : 'Play Audio Passage'}
               </Button>
               
-              <h3 className="text-xl font-semibold mb-6">{question.question}</h3>
-              
-              <div className="space-y-3 max-w-2xl mx-auto">
-                {question.options.map((option, index) => (
-                  <Button
-                    key={index}
-                    variant={selectedAnswer === index ? "default" : "outline"}
-                    className="w-full text-left justify-start p-4 h-auto"
-                    onClick={() => {
-                      setSelectedAnswer(index);
-                      setHasRecorded(true);
-                      const newAnswers = [...answers];
-                      newAnswers[currentQuestion] = index.toString();
-                      setAnswers(newAnswers);
-                    }}
-                  >
-                    <span className="mr-3 font-semibold">{String.fromCharCode(65 + index)}.</span>
-                    {option}
-                  </Button>
-                ))}
-              </div>
+              {hasPlayedAudio && (
+                <div className="text-sm text-muted-foreground mb-4">
+                  ✓ Audio played - Now answer the questions below
+                </div>
+              )}
             </div>
+            
+            {/* Multiple Questions */}
+            {hasPlayedAudio && (
+              <div className="space-y-8 text-left">
+                {passage.questions.map((q, qIndex) => (
+                  <div key={qIndex} className="p-6 bg-muted/30 rounded-lg">
+                    <h4 className="text-lg font-semibold mb-4">
+                      Question {qIndex + 1}: {q.question}
+                    </h4>
+                    
+                    <div className="space-y-3">
+                      {q.options.map((option, oIndex) => (
+                        <Button
+                          key={oIndex}
+                          variant={listeningAnswers[qIndex] === oIndex ? "default" : "outline"}
+                          className="w-full text-left justify-start p-4 h-auto"
+                          onClick={() => handleAnswerSelect(qIndex, oIndex)}
+                        >
+                          <span className="mr-3 font-semibold">{String.fromCharCode(65 + oIndex)}.</span>
+                          {option}
+                        </Button>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+                
+                <div className="text-center pt-4">
+                  <div className="text-sm text-muted-foreground">
+                    Answered: {listeningAnswers.filter(a => a !== undefined).length} of {passage.questions.length} questions
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         </Card>
       </div>
